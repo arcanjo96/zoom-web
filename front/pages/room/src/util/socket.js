@@ -6,7 +6,6 @@ class SocketBuilder {
     }
 
     setOnUserConnected(fn) {
-        console.log(fn);
         this.onUserConnected = fn;
         return this
     }
