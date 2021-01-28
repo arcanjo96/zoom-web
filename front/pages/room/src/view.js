@@ -1,5 +1,7 @@
 class View {
-    constructor() { }
+    constructor() {
+        this.recorderBtn = document.getElementById('record');
+    }
 
     createVideoElement({ muted = true, src, srcObject }) {
         const video = document.createElement('video');
@@ -18,8 +20,8 @@ class View {
         return video;
     }
 
-    renderVideo({ userId, stream = null, url = null, isCurrentId = false }) {
-        const video = this.createVideoElement({ src: url, srcObject: stream });
+    renderVideo({ userId, stream = null, url = null, isCurrentId = false, muted = true }) {
+        const video = this.createVideoElement({ muted, src: url, srcObject: stream });
         this.appendToHTMLTree(userId, video, isCurrentId);
     }
 
@@ -40,5 +42,27 @@ class View {
         const mySelf = 1;
         const participants = document.getElementById('participants');
         participants.innerHTML = (count + mySelf);
+    }
+
+    removeVideoElement(id) {
+        const element = document.getElementById(id);
+        element.remove();
+    }
+
+    toggleRecordingButtonColor(isActive = true) {
+        this.recorderBtn.style.color = isActive ? 'red' : 'white'
+    }
+
+    onRecordClick(command) {
+        this.recordingEnabled = false
+        return () => {
+            const isActive = this.recordingEnabled = !this.recordingEnabled
+            command(this.recordingEnabled);
+            this.toggleRecordingButtonColor(isActive);
+        }
+    }
+
+    configureRecorderButton(command) {
+        this.recorderBtn.addEventListener('click', this.onRecordClick(command));
     }
 }
